@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Observability.ConsoleApp", "Observability\Observability.ConsoleApp.csproj", "{326E05F8-024D-4EE3-BB34-DCC2935659CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Observability.ConsoleApp", "Observability\Observability.ConsoleApp.csproj", "{326E05F8-024D-4EE3-BB34-DCC2935659CD}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0CE3662E-9117-4727-9AC7-A7FE35A10DCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{326E05F8-024D-4EE3-BB34-DCC2935659CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{326E05F8-024D-4EE3-BB34-DCC2935659CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{326E05F8-024D-4EE3-BB34-DCC2935659CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CE3662E-9117-4727-9AC7-A7FE35A10DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE3662E-9117-4727-9AC7-A7FE35A10DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE3662E-9117-4727-9AC7-A7FE35A10DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE3662E-9117-4727-9AC7-A7FE35A10DCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

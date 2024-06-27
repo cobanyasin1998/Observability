@@ -11,5 +11,7 @@ namespace Observability.ConsoleApp.Consts
         internal const string ServiceName = "ConsoleApp"; //CompanyName.AppName.ConsoleApp
         internal const string ServiceVersion = "1.0.0";
         internal const string ActivitySourceName = "ActivitySource.ConsoleApp";
+        internal const string ActivitySourceFileName = "ActivitySource.ConsoleFileApp";
+
     }
 }

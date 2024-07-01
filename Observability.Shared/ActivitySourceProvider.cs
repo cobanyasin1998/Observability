@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 
-namespace Order.API.OpenTelemetry
+namespace Observability.Shared
 {
     public class ActivitySourceProvider
     {
-        internal static ActivitySource Source;
+        public static ActivitySource Source = null!;
     }
 }

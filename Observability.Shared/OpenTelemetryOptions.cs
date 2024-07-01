@@ -1,4 +1,4 @@
-﻿namespace Order.API.OpenTelemetry
+﻿namespace Observability.Shared
 {
     public class OpenTelemetryOptions
     {

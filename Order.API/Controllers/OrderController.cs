@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Order.API.OrderServices;
+using Order.API.RedisServices;
 
 namespace Order.API.Controllers
 {
@@ -8,10 +9,11 @@ namespace Order.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
-
-        public OrderController(OrderService orderService)
+        private readonly RedisService _redisService;
+        public OrderController(OrderService orderService, RedisService redisService)
         {
             _orderService = orderService;
+            _redisService = redisService;
         }
 
         [HttpGet]
@@ -29,11 +31,22 @@ namespace Order.API.Controllers
 
 
         [HttpGet("GetException")]
-        public IActionResult GetException()
+        public async Task<IActionResult> GetException()
         {
-            var a = 10;
-            var b = 0;
-            var c = a / b;
+            var result = await _redisService.SetAsync("Normal"," ex.Message");
+
+            try
+            {
+                var a = 10;
+                var b = 0;
+                var c = a / b;
+            }
+            catch (Exception ex)
+            {
+                var result2 = await _redisService.SetAsync("Exception", ex.Message);
+                return new ObjectResult(result) { StatusCode = 500 };
+            }
+
             return Ok("Order API");
         }
     }

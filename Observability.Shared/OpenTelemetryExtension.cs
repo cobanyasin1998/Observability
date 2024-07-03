@@ -37,7 +37,6 @@ namespace Observability.Shared
                         efCoreOptions.SetDbStatementForText = true;
                         efCoreOptions.SetDbStatementForStoredProcedure = true;
                     });
-
                     opt.AddHttpClientInstrumentation(httpClientOptions =>
                     {
                         httpClientOptions.EnrichWithHttpRequestMessage = async (activity, request) =>
@@ -45,7 +44,7 @@ namespace Observability.Shared
                             var requestContent = string.Empty;
                             if (request.Content is not null)
                             {
-                                requestContent = await  request.Content.ReadAsStringAsync();
+                                requestContent = await request.Content.ReadAsStringAsync();
                             }
                             activity.SetTag("http.request.body", request.RequestUri?.ToString());
                         };
@@ -53,11 +52,14 @@ namespace Observability.Shared
                         {
                             if (response.Content is not null)
                                 activity.SetTag("http.response.body", response.Content.ReadAsStringAsync());
-                            
+
                         };
 
                     });
-
+                    opt.AddRedisInstrumentation(redisOptions =>
+                    {
+                        redisOptions.SetVerboseDatabaseStatements = true;
+                    });
                     opt.AddConsoleExporter();
                     opt.AddOtlpExporter();
                 });

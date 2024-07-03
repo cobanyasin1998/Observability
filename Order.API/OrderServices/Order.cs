@@ -5,9 +5,9 @@
         public int Id { get; set; }
         public string OrderCode { get; set; } = null!;
         public DateTime Created { get; set; }
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public EOrderStatus Status { get; set; }
-        public List<OrderItem> Items { get; set; }
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
     public class OrderItem
     {

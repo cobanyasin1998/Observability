@@ -1,11 +1,20 @@
 ﻿using Common.Shared.DTOs;
+using Common.Shared.DTOs.Payment;
 using Common.Shared.DTOs.Stock;
+using Stock.API.Services;
 using System.Net;
 
 namespace Stock.API
 {
     public class StockService
     {
+        private readonly PaymentService _paymentService;
+
+        public StockService(PaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
+
         public static Dictionary<int, int> GetProductStockList()
         {
             return new Dictionary<int, int>
@@ -18,7 +27,7 @@ namespace Stock.API
             };
         }
 
-        public ResponseDto<StockCheckAndPaymentProcessResponseDto> CheckAndPaymentProcess(StockCheckAndPaymentProcessRequestDto stockCheckAndPaymentProcessRequestDto)
+        public async Task<ResponseDto<StockCheckAndPaymentProcessResponseDto>> CheckAndPaymentProcess(StockCheckAndPaymentProcessRequestDto stockCheckAndPaymentProcessRequestDto)
         {
             var stockList = GetProductStockList();
             var stockStatus = new List<(int productId, bool hasStockExists)>();
@@ -31,10 +40,23 @@ namespace Stock.API
                 return ResponseDto<StockCheckAndPaymentProcessResponseDto>
                     .Fail(HttpStatusCode.BadRequest.GetHashCode(), "Stock is not enough for some products");
             }
-            return ResponseDto<StockCheckAndPaymentProcessResponseDto>.Success(HttpStatusCode.OK.GetHashCode(), new StockCheckAndPaymentProcessResponseDto()
+            var paymentResponse = await _paymentService.CreatePaymentProcess(new PaymentCreateProcessRequestDto()
             {
-                Description = "Stock is enough for all products",
+                OrderCode = stockCheckAndPaymentProcessRequestDto.OrderCode,
+                TotalPrice = stockCheckAndPaymentProcessRequestDto.Items.Sum(x => x.Quantity * x.UnitPrice)
             });
+            if (paymentResponse.isSuccess)
+            {
+                return ResponseDto<StockCheckAndPaymentProcessResponseDto>.Success(HttpStatusCode.OK.GetHashCode(), new StockCheckAndPaymentProcessResponseDto()
+                {
+                    Description = "Payment is successful"
+                });
+            }
+           return ResponseDto<StockCheckAndPaymentProcessResponseDto>.Fail(HttpStatusCode.BadRequest.GetHashCode(), paymentResponse.failMessage);
+         
+
+
+
             // Payment process will be implemented here
         }
 

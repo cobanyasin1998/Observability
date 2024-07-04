@@ -2,6 +2,7 @@
 using Common.Shared.DTOs.Payment;
 using Common.Shared.DTOs.Stock;
 using Stock.API.Services;
+using System.Diagnostics;
 using System.Net;
 
 namespace Stock.API
@@ -29,6 +30,10 @@ namespace Stock.API
 
         public async Task<ResponseDto<StockCheckAndPaymentProcessResponseDto>> CheckAndPaymentProcess(StockCheckAndPaymentProcessRequestDto stockCheckAndPaymentProcessRequestDto)
         {
+           var userId =  Activity.Current?.GetBaggageItem("userId");
+
+
+
             var stockList = GetProductStockList();
             var stockStatus = new List<(int productId, bool hasStockExists)>();
             foreach (var item in stockCheckAndPaymentProcessRequestDto.Items)

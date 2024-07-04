@@ -42,7 +42,7 @@ namespace Order.API.OrderServices
             _appDbContext.Orders.Add(newOrder);
             int result = await _appDbContext.SaveChangesAsync();
             activity?.SetTag("order User Id: ", newOrder.UserId);
-
+            activity?.SetBaggage("userId", newOrder.UserId.ToString());
             var res= await _stockService.CheckAndPaymentProcess(new StockCheckAndPaymentProcessRequestDto
             {
                 OrderCode = newOrder.OrderCode,

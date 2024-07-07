@@ -20,3 +20,26 @@ services:
         ports:
         - "5672:5672"    #amqp
         - "15672:15672"  #UI
+    elasticsearch:
+        container_name: "elasticsearch-container"
+        environment:
+        - xpack.security.enabled=false
+        - discovery.type=single-node
+        - ELASTIC_USERNAME=elastic
+        - ELASTIC_PASSWORD=DkIedPPSCb
+        volumes:
+        - elastic_db:/usr/share/elasticsearch/data
+        ports:
+        - "9200:9200"    #http
+        - "9300:9300"    #tcp
+    kibana:
+        container_name: "kibana-container"
+        environment:
+        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        depends_on:
+        - elasticsearch
+        ports:
+        - "5601:5601"    #http
+volumes:
+    elastic_db:
+    

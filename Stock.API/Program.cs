@@ -1,6 +1,8 @@
 using Common.Shared;
+using MassTransit;
 using Observability.Shared;
 using Stock.API;
+using Stock.API.Consumers;
 using Stock.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,25 @@ builder.Services.AddHttpClient<PaymentService>(opt =>
     opt.BaseAddress = new Uri((builder.Configuration.GetSection("ApiServices")["PaymentService"])!);
 
 });
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<OrderCreatedEventConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", host =>
+        {
+            host.Username("guest");
+            host.Password("guest");
+        });
+
+        cfg.ReceiveEndpoint("stock.order-created-event-queue", e =>
+        {
+            e.ConfigureConsumer<OrderCreatedEventConsumer>(context);
+        });
+    });
+
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
 using Common.Shared;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Observability.Shared;
@@ -37,7 +38,26 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddOpenTelemetryExtension(builder.Configuration);
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", host =>
+        {
+            host.Username("guest");
+            host.Password("guest");
+        });
+    });
+
+});
+
 var app = builder.Build();
+
+
+
+
+
+
 
 if (app.Environment.IsDevelopment())
 {

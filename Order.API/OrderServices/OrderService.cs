@@ -1,6 +1,8 @@
 ﻿using Common.Shared.DTOs;
 using Common.Shared.DTOs.Order;
 using Common.Shared.DTOs.Stock;
+using Common.Shared.Events;
+using MassTransit;
 using Observability.Shared;
 using Order.API.Models;
 using Order.API.StockServices;
@@ -12,11 +14,13 @@ namespace Order.API.OrderServices
     {
         private readonly AppDbContext _appDbContext;
         private readonly StockService _stockService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public OrderService(AppDbContext appDbContext, StockService stockService)
+        public OrderService(AppDbContext appDbContext, StockService stockService, IPublishEndpoint publishEndpoint)
         {
             _appDbContext = appDbContext;
             _stockService = stockService;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<ResponseDto<OrderCreateResponseDto>> CreateAsync(OrderCreateRequestDto orderCreateRequestDto)
@@ -41,9 +45,12 @@ namespace Order.API.OrderServices
             };
             _appDbContext.Orders.Add(newOrder);
             int result = await _appDbContext.SaveChangesAsync();
+
+          
+
             activity?.SetTag("order User Id: ", newOrder.UserId);
             activity?.SetBaggage("userId", newOrder.UserId.ToString());
-            var res= await _stockService.CheckAndPaymentProcess(new StockCheckAndPaymentProcessRequestDto
+            var res = await _stockService.CheckAndPaymentProcess(new StockCheckAndPaymentProcessRequestDto
             {
                 OrderCode = newOrder.OrderCode,
                 Items = newOrder.Items.Select(x => new OrderItemDto

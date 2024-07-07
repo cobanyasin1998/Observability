@@ -7,3 +7,5 @@ services:
         image: openzipkin/zipkin:2.24
     redis:
         image: redis:7.0
+    rabbitmq:
+        image: rabbitmq:3.12.2-management

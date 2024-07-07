@@ -13,9 +13,9 @@ namespace Stock.API.Services
         }
         public async Task<(bool isSuccess, string? failMessage)> CreatePaymentProcess(PaymentCreateProcessRequestDto paymentCreateProcessRequestDto)
         {
-            var response = await _httpClient.PostAsJsonAsync<PaymentCreateProcessRequestDto>("api/PaymentProcess/ProcessPayment", paymentCreateProcessRequestDto);
-            var result = await response.Content.ReadFromJsonAsync<ResponseDto<StockCheckAndPaymentProcessResponseDto>>();
-            return response.IsSuccessStatusCode ? (true, null) : (false, result!.Errors!.First());
+            var response = await _httpClient.PostAsJsonAsync<PaymentCreateProcessRequestDto>("api/PaymentProcess", paymentCreateProcessRequestDto);
+            //var result = await response.Content.ReadFromJsonAsync<PaymentCreateProcessResponseDto>();
+            return response.IsSuccessStatusCode ? (true, null) : (false, "");
         }
     }
 }

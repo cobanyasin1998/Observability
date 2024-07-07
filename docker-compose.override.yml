@@ -15,3 +15,8 @@ services:
         container_name: "redis-container"
         ports:
         - "6379:6379"    #redis
+    rabbitmq:
+        container_name: "rabbitmq-container"
+        ports:
+        - "5672:5672"    #amqp
+        - "15672:15672"  #UI

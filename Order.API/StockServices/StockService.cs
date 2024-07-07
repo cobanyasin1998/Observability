@@ -13,8 +13,8 @@ namespace Order.API.StockServices
         public async Task<(bool isSuccess, string? failMessage)> CheckAndPaymentProcess(StockCheckAndPaymentProcessRequestDto stockCheckAndPaymentProcessRequestDto)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Stock/CheckAndPaymentStart", stockCheckAndPaymentProcessRequestDto);
-            var result = await response.Content.ReadFromJsonAsync<ResponseDto<StockCheckAndPaymentProcessResponseDto>>();
-            return response.IsSuccessStatusCode ? (true,null) : (false,result!.Errors!.First());
+           // var result = await response.Content.ReadFromJsonAsync<ResponseDto<StockCheckAndPaymentProcessResponseDto>>();
+            return response.IsSuccessStatusCode ? (true,null) : (true,"");
         }
     }
 }

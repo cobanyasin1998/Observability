@@ -1,19 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Shared.Events;
+using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Order.API.OrderServices;
 using Order.API.RedisServices;
 
 namespace Order.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
         private readonly RedisService _redisService;
-        public OrderController(OrderService orderService, RedisService redisService)
+        private readonly IPublishEndpoint _publishEndpoint;
+
+        public OrderController(OrderService orderService, RedisService redisService, IPublishEndpoint publishEndpoint)
         {
             _orderService = orderService;
             _redisService = redisService;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -28,12 +33,22 @@ namespace Order.API.Controllers
             return new ObjectResult(result) { StatusCode = result.StatusCode };
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SendOrderCreatedEvent()
+        {
+            //Kuyruğa mesaj gönderme işlemi
+            await _publishEndpoint.Publish(new OrderCreatedEvent
+            {
+                OrderCode = new Random().Next(0, 500).ToString()
+            });
+            return Ok("Order API");
+        }
 
-
+         
         [HttpGet("GetException")]
         public async Task<IActionResult> GetException()
         {
-            var result = await _redisService.SetAsync("Normal"," ex.Message");
+            var result = await _redisService.SetAsync("Normal", " ex.Message");
 
             try
             {

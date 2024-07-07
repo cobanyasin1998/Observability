@@ -10,16 +10,16 @@ namespace Payment.API.Controllers
     public class PaymentProcessController : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> ProcessPayment(PaymentCreateProcessRequestDto request)
+        public PaymentCreateProcessResponseDto Payment(PaymentCreateProcessRequestDto request)
         {
 
             const decimal balance = 1000;
             if (request.TotalPrice > balance)
             {
-                return BadRequest(ResponseDto<PaymentCreateProcessResponseDto>.Fail(400, "Yetersiz Bakiye"));
+                return new PaymentCreateProcessResponseDto() { Description = "Yetersiz Bakiye" };
             }
 
-            return Ok(ResponseDto<PaymentCreateProcessResponseDto>.Success(200, new PaymentCreateProcessResponseDto() { Description = "Başarılı" }));
+            return new PaymentCreateProcessResponseDto() { Description = "Başarılı" };
         }
     }
 }

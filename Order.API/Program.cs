@@ -1,4 +1,5 @@
 using Common.Shared;
+using Logging.Shared;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Observability.Shared;
@@ -68,6 +69,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<RequestAndResponseActivityMiddleware>();
+app.UseMiddleware<OpenTelemetryTraceIdMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

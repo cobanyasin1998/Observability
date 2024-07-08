@@ -13,12 +13,14 @@ namespace Order.API.Controllers
         private readonly OrderService _orderService;
         private readonly RedisService _redisService;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ILogger<OrderController> _logger;
 
-        public OrderController(OrderService orderService, RedisService redisService, IPublishEndpoint publishEndpoint)
+        public OrderController(OrderService orderService, RedisService redisService, IPublishEndpoint publishEndpoint, ILogger<OrderController> logger)
         {
             _orderService = orderService;
             _redisService = redisService;
             _publishEndpoint = publishEndpoint;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -36,6 +38,9 @@ namespace Order.API.Controllers
         [HttpGet]
         public async Task<IActionResult> SendOrderCreatedEvent()
         {
+
+            _logger.LogInformation("OrderCreatedEvent is sending to RabbitMQ: @{userId}",new Guid().ToString());
+
             //Kuyruğa mesaj gönderme işlemi
             await _publishEndpoint.Publish(new OrderCreatedEvent
             {
